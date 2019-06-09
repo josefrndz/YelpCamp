@@ -1,0 +1,24 @@
+{
+  "name": "yelpcamp",
+  "version": "1.0.0",
+  "description": "Yelp for campsites!",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/josefrndz/YelpCamp.git"
+  },
+  "author": "Jose Fernandez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/josefrndz/YelpCamp/issues"
+  },
+  "homepage": "https://github.com/josefrndz/YelpCamp#readme",
+  "devDependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.17.1",
+    "nodemon": "^1.19.1"
+  }
+}
