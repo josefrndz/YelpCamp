@@ -1,22 +1,18 @@
-const express = require('express');
-const app = express();
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
+var express = require('express'),
+  app = express(),
+  bodyParser = require('body-parser'),
+  mongoose = require('mongoose'),
+  Campground = require('./models/campground'),
+  seedDB = require('./models/seeds');
 
-mongoose.connect('mongodb://localhost:27017/yelp_camp', {
+mongoose.connect('mongodb://localhost:27017/yelp_camp_v3', {
   useNewUrlParser: true
 });
 
-//Schema Set Up
-var campgroundSchema = new mongoose.Schema({
-  name: String,
-  image: String,
-  description: String
-});
-
-var Campgound = mongoose.model('Campground', campgroundSchema);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
+
+seedDB();
 
 app.get('/', (req, res) => {
   res.render('landing');
@@ -24,7 +20,7 @@ app.get('/', (req, res) => {
 
 app.get('/campgrounds', (req, res) => {
   //Get all campgrounds from DB
-  Campgound.find({}, (err, allCampgrounds) => {
+  Campground.find({}, (err, allCampgrounds) => {
     if (err) {
       console.log(err);
     } else {
@@ -58,17 +54,25 @@ app.get('/campgrounds/new', (req, res) => {
 
 //SHOW - shows more info about one campground
 app.get('/campgrounds/:id', (req, res) => {
-  Campgound.findById(req.params.id, (err, foundCampground) => {
-    if (err) {
-      console.log(err);
-    } else {
-      //render 'show' template with that campground
-      res.render('show', { campground: foundCampground });
-    }
-  });
+  Campground.findById(req.params.id)
+    .populate('comments')
+    .exec((err, foundCampground) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(foundCampground);
+        //render 'show' template with that campground
+        res.render('show', { campground: foundCampground });
+      }
+    });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, process.env.IP, () => {
+// --------------------
+// Comments Routes
+// --------------------
+
+app.get('/campgrounds/:id/comments/new', (req, res) => {});
+
+app.listen(process.env.PORT || 5000, process.env.IP, () => {
   console.log(`Server has started on PORT ${PORT}`);
 });
